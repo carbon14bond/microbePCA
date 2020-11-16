@@ -1,0 +1,42 @@
+---
+title: "PCA tutorial"
+author: "Charles Bond"
+date: "11/9/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggfortify)
+df <- iris[1:4]
+sdf <- scale(df, center = TRUE)
+csdf <- cov(sdf)
+eigen_iris <- eigen(csdf)
+eval1<- eigen(csdf)$values/sum(eigen(csdf)$values)
+
+
+```
+
+
+```{r}
+library(ggfortify)
+df <- iris[1:4]
+pca_res <- prcomp(df, center = TRUE, scale. = TRUE)
+
+autoplot(pca_res, data = iris, colour = 'Species',
+         loadings = TRUE, loadings.colour = 'blue',
+         loadings.label = TRUE, loadings.label.size = 3)
+
+```
+
+
+```{r}
+library(ggfortify)
+
+
+
+```
+
