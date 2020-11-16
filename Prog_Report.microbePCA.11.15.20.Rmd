@@ -7,20 +7,70 @@ bibliography: refsA.bib
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE) 
+library(vegan)
 ```
 
 ## Current Status: Stuck, cannot run script
 
-I have checked every link, the two githubs and the data repository provided in the **Availability of Materials and Data** section of the article of interest. Looking for the tools to run the PCA analysis shown in figure 2 [@RN44], I have been unable to run the code given due to what seems to be a basic oversight. 
+Looking for the tools to run the PCA analysis shown in figure 2 [@RN44], I have been unable to run the code so far. I appear to have all the files, code, and data from the two githubs and the data repository provided in the **Availability of Materials and Data** section of the article of interest. The code looks good, but I can't get past this setup error: the script seems to be having trouble accessing the files that came from the repository.
 
-The very first lines of code in the Rscript file for the PCA analysis are as follows:
+The very first lines of code, which give me an error, in the Rscript file for the PCA analysis are as follows:
 
-`source(paste0(Sys.getenv('ROOT_MICROBIOME_DIR'), "/code/hdr.microbiome_methods.R"));
-source(paste0(Sys.getenv('ROOT_MICROBIOME_DIR'), "/code/hdr.base_methods.R"));`
+```{r}
+## This R-script 
+## 
+## Author: matt.horton
+###############################################################################
 
-No folder labeled "code" appears in either of the provided github repositories, nor can I find R files with the names given here. So, without the associated R files in any repository, I cannot run the code as is. I am trying to wrap my head around running a PCA of what data I have here, but this is a ton of data, of a kind that I've not really worked with before, so I don't know where to start.  
+rm(list=ls());
+require(vegan); require(lme4);
+source(paste0(Sys.getenv('ROOT_MICROBIOME_DIR'), "/hdr.microbiome_methods.R"));
+source(paste0(Sys.getenv('ROOT_MICROBIOME_DIR'), "/hdr.base_methods.R"));
 
+
+
+###############################################################################
+## metagenomic variables:
+###############################################################################
+numberOfPCsMicrobes <- 5;
+organ <- "root";
+phylogeneticMarker <- "ITS";
+otuCutoff <- 97;
+minimumReads <- 1;
+otuThreshold <- 2;
+
+normalizationMethod <- "raw";
+analyticalMethod <- "glmer";
+ordinationMethod <- "pca";
+```
+
+The `source` function cannot access the required file. I checked that the requested files are indeed in the working directory, and I have tried moving them to the main folder and checking the code, I don't know why R can not access these files. 
+
+The README says:
+
+To avoid using hardcoded paths, we use R's ability to load environmental variables (using the command syntax Sys.getenv('variable_name')).
+The variables that need to be loaded, by the user, can be done so using the following bash code:
+```console
+export ROOT_MICROBIOME_DIR='<your_directory>/root_microbes/'
+```
+
+I have not yet been able to figure out what to do with that information. 
+
+
+I wanted to run some kind of PCA even if only a subset of the data, but the PCA is based on metagenoimc data which I have never worked with. Just looking at it I can see that there is a lot of code involved in making the data usable, which I wouldn't know how to do without even the first line of the original code to work. 
+
+
+
+
+
+
+
+
+
+
+
+# Previous Update, 11/08/2020
 
 Based on the availability of the data and the posting of the code on github ( https://github.com/bvilhjal/mixmogam and https://github.com/mahort/root_microbiome.
  ) I have selected a paper on the *Arabidopsis* root microbiome [@RN44] as the subject of my next replication attempt. If it goes well there are a lot of figures in this paper that would be worthwhile to replicate, but the one I am mmost interested in is the PCA shown in Figure 2 of the paper. 
@@ -33,10 +83,6 @@ I downloaded whole github repository as a zip file and put it here, but I guess 
 "Error in getData(cutoff = otuCutoff, combined = FALSE, marker = phylogeneticMarker,  : 
   unused arguments (cutoff = otuCutoff, combined = FALSE, marker = phylogeneticMarker, tissue = organ, minReadsPerSite = minimumReads, minSamplePerOTU = 1, whetherToGetTaxa = TRUE, rarefy = (minimumReads > 1), numberOfRarefactions = 1)", 
   which idk what that means but I guess I need to tinker with this more. 
-
-```{r, echo=TRUE}
-library(vegan)
-```
 
 ## References
 
