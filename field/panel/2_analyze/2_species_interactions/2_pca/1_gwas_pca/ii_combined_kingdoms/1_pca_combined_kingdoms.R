@@ -7,8 +7,8 @@ rm(list=ls());
 
 require(vegan); require(lme4);
 
-source(paste0(Sys.getenv('ROOT_MICROBIOME_DIR'), "/code/hdr.microbiome_methods.R"));
-source(paste0(Sys.getenv('ROOT_MICROBIOME_DIR'), "/code/hdr.base_methods.R"));
+source(paste0(Sys.getenv('ROOT_MICROBIOME_DIR'), "./hdr.microbiome_methods.R"));
+source(paste0(Sys.getenv('ROOT_MICROBIOME_DIR'), "./hdr.base_methods.R"));
 
 ###############################################################################
 ## metagenomic variables:
