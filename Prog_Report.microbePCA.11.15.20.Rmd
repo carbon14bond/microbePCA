@@ -1,7 +1,7 @@
 ---
 title: "Progress Report"
 author: "Charles Bond"
-date: "11/15/2020"
+date: "11/22/2020"
 output: pdf_document
 bibliography: refsA.bib
 ---
@@ -9,24 +9,29 @@ bibliography: refsA.bib
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE) 
 library(vegan)
+### Here I am including the code Dr. Caz commented to include, but it hasn't so;lved the error messages. :/
+Sys.setenv("ROOT_MICROBIOME_DIR"=".")
 ```
 
-## Current Status: Stuck, code runs partially, makes it through data setup. Then gives error message, gets stuck on PCA. 
+## Current Status: Stuck, code runs partially, then gives error messages, gets stuck on first element of loop.
+
+I've read and reread the methods section of the paper and all the READMEs and still don't know what I'm missing. I've run the code in the original scripts and in this RMarkdown document and get the same result: for some reason it can't source the methods files and then something in the loop fails but it won't give me the exact line, just the loop. This code is no simple PCA. In each of the two PCA scripts, the first section of code sorts the raw data in preparation for a loop that is supposed to generate the PCAs. I can get that first section of code to run, and then once it enters the loop I think something fails in the first iteration that gives me a long list of errors. This is after checking that the files being called up are in the working directory. I tried manually sourcing the methods code, doesn't help. Quadruple checked that the files aare in the working directory, but they still come up as errors when the script tries to access them.   
+The errors make me think that the folder system for organizing the scripts is perhaps too complicated for replicability? The code is only from 2019, would package updates or anything be making it not work? I don't think so. But maybe in the loops it's failing to access some file that it should be able to? I can't even load the data to run a prcomp on, since I require the code to clean up and spit out the actual data used in the original analyses. This was written for people who know R better than I do. 
 
 Looking for the tools to run the PCA analysis shown in figure 2 [@RN44], I have been unable to run the code so far. I appear to have all the files, code, and data from the two githubs and the data repository provided in the **Availability of Materials and Data** section of the article of interest. The code looks good, but I can't get past this setup error: the script seems to be having trouble accessing the files that came from the repository.
 
-The very first lines of code, which give me an error, in the Rscript file for the PCA analysis are as follows:
 
 ```{r error = TRUE}
+
 ## This R-script 
 ## 
 ## Author: matt.horton
 ###############################################################################
 
-rm(list=ls());
+#rm(list=ls());
 require(vegan); require(lme4);
-source(paste0(Sys.getenv('ROOT_MICROBIOME_DIR'), "./hdr.microbiome_methods.R"));
-source(paste0(Sys.getenv('ROOT_MICROBIOME_DIR'), "./hdr.base_methods.R"));
+source(paste(Sys.getenv('ROOT_MICROBIOME_DIR'), "/hdr.microbiome_methods.R"));
+source(paste(Sys.getenv('ROOT_MICROBIOME_DIR'), "/hdr.base_methods.R"));
 
 
 
@@ -124,7 +129,7 @@ ordinationMethod <- "pca";
 	###############################################################################	
 	## Move to the output directory.
 	###############################################################################
-	setwd(paste0(Sys.getenv('ROOT_MICROBIOME_DIR'), "/gwas/otus", otuCutoff, "/", organ, "/phenotypes/")); ## 
+	setwd(paste0(Sys.getenv('ROOT_MICROBIOME_DIR'), "/gwas/otus97", otuCutoff, "/", organ, "/phenotypes/")); ## 
 	cat("Performing", ordinationMethod, "\n");
 
 	formatEigenvectorsForGWA <- function( eigenvectorMatrix, numberOfEigenvectors=numberOfPCs){
@@ -180,9 +185,7 @@ The variables that need to be loaded, by the user, can be done so using the foll
 export ROOT_MICROBIOME_DIR='<your_directory>/root_microbes/'
 ```
 
-I have not yet been able to figure out what to do with that information. 
-
-
+I have entered that 
 I wanted to run some kind of PCA even if only a subset of the data, but the PCA is based on metagenoimc data which I have never worked with. Just looking at it I can see that there is a lot of code involved in making the data usable, which I wouldn't know how to do without even the first line of the original code to work. 
 
 ```{r combinedkingdoms}
@@ -196,8 +199,8 @@ rm(list=ls());
 
 require(vegan); require(lme4);
 
-source(paste0(Sys.getenv('ROOT_MICROBIOME_DIR'), "./hdr.microbiome_methods.R"));
-source(paste0(Sys.getenv('ROOT_MICROBIOME_DIR'), "./hdr.base_methods.R"));
+source(paste0(Sys.getenv('ROOT_MICROBIOME_DIR'), "/hdr.microbiome_methods.R"));
+source(paste0(Sys.getenv('ROOT_MICROBIOME_DIR'), "/hdr.base_methods.R"));
 
 ###############################################################################
 ## metagenomic variables:
@@ -366,7 +369,7 @@ analyticalMethodFungi <- "glmer"; ## logistic regression requires the argument `
 		################################################################################################################################################
 		# specify the mapping directory.
 		################################################################################################################################################
-		setwd(paste0(Sys.getenv('ROOT_MICROBIOME_DIR'), "/gwas/otus", otuCutoff, "/", organ, "/phenotypes/")); ## 
+		setwd(paste0(Sys.getenv('ROOT_MICROBIOME_DIR'), "/gwas/otus97", otuCutoff, "/", organ, "/phenotypes/")); ## 
 		minimumReads <- paste( unique(c( minReadsBacteria, minReadsFungi)), sep="", collapse="_"); rm(minReadsBacteria); rm(minReadsFungi);
 
 		###############################################################################
@@ -427,8 +430,6 @@ Based on the availability of the data and the posting of the code on github ( ht
 
 Once again, this paper uses the package `vegan` to do the PCA, so I've got that.
 
-## Status: Making progress, found PCA file in github and just trying to figure out where to start.
-I am confused on how approach this, like I made a github repository for my replication, but they have a huge github repository for the original, and I'm wondering if I should download files individually or try to pull the whole project down in case there are files it's referncing that I miss?
 I downloaded whole github repository as a zip file and put it here, but I guess I need to alter relative paths or something to make it work? I tried running one of the PCA Rscript and get the error
 "Error in getData(cutoff = otuCutoff, combined = FALSE, marker = phylogeneticMarker,  : 
   unused arguments (cutoff = otuCutoff, combined = FALSE, marker = phylogeneticMarker, tissue = organ, minReadsPerSite = minimumReads, minSamplePerOTU = 1, whetherToGetTaxa = TRUE, rarefy = (minimumReads > 1), numberOfRarefactions = 1)", 
